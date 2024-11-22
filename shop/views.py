@@ -9,4 +9,7 @@ def login_view(request):
 def signup_view(request):
     return render(request, 'auth/signup.html')
 
+def profile_view(request):
+    return render(request, 'profile.html')
+
 # Create your views here.

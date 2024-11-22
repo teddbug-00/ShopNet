@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopNet - Login</title>
+    <link rel="stylesheet" href="/static/css/auth.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Login to your account</p>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <button id="googleSignIn" class="google-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                Continue with Google
+            </button>
+
+            <p class="switch-form">
+                Don't have an account? <a href="/signup">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <script type="module" src="/static/js/login.js"></script>
+    
+</body>
+</html> 

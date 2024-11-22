@@ -11,7 +11,11 @@ import {
     setPersistence
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Your web app's Firebase configuration
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCKF66lKTNM8SDuGEVeTPSC0Xvwv37FfqQ",
     authDomain: "shopnet-72085.firebaseapp.com",
@@ -25,6 +29,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Configure GoogleAuthProvider
 const googleProvider = new GoogleAuthProvider();
@@ -41,11 +47,4 @@ setPersistence(auth, browserLocalPersistence)
         console.error('Error setting persistence:', error);
     });
 
-export { 
-    auth, 
-    signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword, 
-    signInWithRedirect,
-    getRedirectResult, 
-    googleProvider 
-};
+export { auth, db, storage, googleProvider };

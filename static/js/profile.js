@@ -1,9 +1,8 @@
 import { auth } from './firebase-config.js';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const db = getFirestore();
-const storage = getStorage();
+const IMGUR_CLIENT_ID = '572b888393bb5ae'; // Replace with your Client ID
 
 // DOM Elements
 const profileImage = document.getElementById('profileImage');
@@ -13,6 +12,27 @@ const userEmailElement = document.getElementById('userEmail');
 const profileForm = document.getElementById('profileForm');
 const nameInput = document.getElementById('name');
 const phoneInput = document.getElementById('phone');
+
+// Function to upload image to Imgur
+async function uploadToImgur(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Client-ID ${IMGUR_CLIENT_ID}`
+        },
+        body: formData
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to upload image to Imgur');
+    }
+
+    const data = await response.json();
+    return data.data.link;
+}
 
 // Check authentication state
 auth.onAuthStateChanged(async (user) => {
@@ -46,20 +66,29 @@ photoInput.addEventListener('change', async (e) => {
     if (file) {
         try {
             const user = auth.currentUser;
-            const storageRef = ref(storage, `profile_images/${user.uid}`);
-            await uploadBytes(storageRef, file);
-            const photoURL = await getDownloadURL(storageRef);
+            if (!user) throw new Error('No user logged in');
+
+            // Show loading state
+            profileImage.style.opacity = '0.5';
+
+            // Upload to Imgur
+            const imageUrl = await uploadToImgur(file);
+            console.log('Image uploaded to Imgur:', imageUrl);
             
             // Update profile image
-            profileImage.src = photoURL;
+            profileImage.src = imageUrl;
+            profileImage.style.opacity = '1';
             
-            // Save to Firestore
+            // Save URL to Firestore
             await setDoc(doc(db, 'users', user.uid), {
-                photoURL: photoURL
+                photoURL: imageUrl
             }, { merge: true });
             
+            console.log('Profile image updated successfully');
         } catch (error) {
             console.error('Error uploading image:', error);
+            alert('Error uploading image: ' + error.message);
+            profileImage.style.opacity = '1';
         }
     }
 });

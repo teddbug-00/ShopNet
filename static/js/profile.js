@@ -13,11 +13,6 @@ const userEmailElement = document.getElementById('userEmail');
 const profileForm = document.getElementById('profileForm');
 const nameInput = document.getElementById('name');
 const phoneInput = document.getElementById('phone');
-const addressList = document.getElementById('addressList');
-const addressModal = document.getElementById('addressModal');
-const addressForm = document.getElementById('addressForm');
-const addAddressBtn = document.getElementById('addAddressBtn');
-const closeModalBtn = document.querySelector('.close');
 
 // Check authentication state
 auth.onAuthStateChanged(async (user) => {
@@ -34,10 +29,6 @@ auth.onAuthStateChanged(async (user) => {
             phoneInput.value = data.phone || '';
             if (data.photoURL) {
                 profileImage.src = data.photoURL;
-            }
-            // Load addresses
-            if (data.addresses) {
-                renderAddresses(data.addresses);
             }
         }
     } else {
@@ -91,60 +82,6 @@ profileForm.addEventListener('submit', async (e) => {
         alert('Error updating profile');
     }
 });
-
-// Handle address modal
-addAddressBtn.addEventListener('click', () => {
-    addressModal.style.display = 'block';
-});
-
-closeModalBtn.addEventListener('click', () => {
-    addressModal.style.display = 'none';
-});
-
-// Handle address form submission
-addressForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const user = auth.currentUser;
-    
-    const newAddress = {
-        street: document.getElementById('street').value,
-        city: document.getElementById('city').value,
-        state: document.getElementById('state').value,
-        zipcode: document.getElementById('zipcode').value
-    };
-    
-    try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const addresses = userDoc.exists() ? (userDoc.data().addresses || []) : [];
-        addresses.push(newAddress);
-        
-        await setDoc(doc(db, 'users', user.uid), {
-            addresses: addresses
-        }, { merge: true });
-        
-        renderAddresses(addresses);
-        addressModal.style.display = 'none';
-        addressForm.reset();
-    } catch (error) {
-        console.error('Error adding address:', error);
-        alert('Error adding address');
-    }
-});
-
-// Render addresses
-function renderAddresses(addresses) {
-    addressList.innerHTML = addresses.map((address, index) => `
-        <div class="address-card">
-            <div>
-                ${address.street}<br>
-                ${address.city}, ${address.state} ${address.zipcode}
-            </div>
-            <button onclick="deleteAddress(${index})" class="delete-btn">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    `).join('');
-}
 
 // Handle logout
 document.getElementById('logoutBtn').addEventListener('click', async () => {

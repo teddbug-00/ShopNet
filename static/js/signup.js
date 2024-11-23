@@ -3,8 +3,10 @@ import {
     createUserWithEmailAndPassword, 
     signInWithRedirect, 
     getRedirectResult, 
-    googleProvider 
+    googleProvider,
+    db
 } from './firebase-config.js';
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 console.log('Auth script loaded');
 
@@ -76,10 +78,24 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     }
 
     try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        // Create the user
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Create initial Firestore document for the user
+        await setDoc(doc(db, 'users', user.uid), {
+            email: user.email,
+            displayName: '',
+            phone: '',
+            createdAt: new Date().toISOString()
+        });
+
         showSuccess('Account created successfully!');
-        redirectToHome();
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
     } catch (error) {
+        console.error('Signup error:', error);
         showError(error.message);
     }
 });

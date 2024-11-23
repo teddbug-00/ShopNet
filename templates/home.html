@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShopNet - Home</title>
     <link rel="stylesheet" href="/static/css/home.css">
-    <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-left">
             <a href="/" class="logo">ShopNet</a>
@@ -21,25 +19,24 @@
         <div class="nav-right">
             <a href="/cart" class="nav-item">
                 <i class="fas fa-shopping-cart"></i>
+                Cart
                 <span class="cart-count">0</span>
             </a>
             <div class="user-menu">
-                <button id="userMenuBtn" class="nav-item">
+                <button class="nav-item" id="userMenuBtn">
                     <i class="fas fa-user"></i>
-                    <span id="userEmail"></span>
+                    Account
                 </button>
-                <div class="dropdown-menu">
+                <div class="dropdown-menu" id="userDropdown">
                     <a href="/profile">Profile</a>
-                    <a href="/orders">My Orders</a>
+                    <a href="/orders">Orders</a>
                     <a href="#" id="logoutBtn">Logout</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main>
-        <!-- Featured Categories -->
         <section class="categories">
             <h2>Shop by Category</h2>
             <div class="category-grid">
@@ -62,29 +59,30 @@
             </div>
         </section>
 
-        <!-- Featured Products -->
         <section class="products">
             <h2>Featured Products</h2>
-            <div class="product-grid">
-                <!-- Product cards will be dynamically added here -->
+            <div class="product-grid" id="productGrid">
+                <!-- Products will be dynamically loaded here -->
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <h3>About ShopNet</h3>
-                <p>Your one-stop shop for all your needs. Quality products, great prices, and excellent service.</p>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
             </div>
             <div class="footer-section">
-                <h3>Quick Links</h3>
+                <h3>Customer Service</h3>
                 <ul>
-                    <li><a href="/about">About Us</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                    <li><a href="/shipping">Shipping Info</a></li>
-                    <li><a href="/returns">Returns</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -101,34 +99,6 @@
         </div>
     </footer>
 
-    <script type="module">
-        import { auth } from '/static/js/firebase-config.js';
-
-        // Check authentication state
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                console.log('User is signed in:', user.email);
-                document.getElementById('userEmail').textContent = user.email;
-            } else {
-                console.log('No user signed in');
-                window.location.href = '/login';
-            }
-        });
-
-        // Handle logout
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            try {
-                await auth.signOut();
-                window.location.href = '/login';
-            } catch (error) {
-                console.error('Error signing out:', error);
-            }
-        });
-
-        // Toggle user menu
-        document.getElementById('userMenuBtn').addEventListener('click', () => {
-            document.querySelector('.dropdown-menu').classList.toggle('show');
-        });
-    </script>
+    <script type="module" src="/static/js/home.js"></script>
 </body>
 </html> 

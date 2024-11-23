@@ -71,10 +71,15 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
 
     try {
-        await signInWithEmailAndPassword(auth, email, password);
+        console.log('Attempting login...');
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('Login successful:', userCredential.user);
         showSuccess('Login successful!');
-        redirectToHome();
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
     } catch (error) {
+        console.error('Login error:', error);
         showError(error.message);
     }
 });

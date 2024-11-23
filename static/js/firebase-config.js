@@ -47,4 +47,13 @@ setPersistence(auth, browserLocalPersistence)
         console.error('Error setting persistence:', error);
     });
 
-export { auth, db, storage, googleProvider };
+export { 
+    auth, 
+    db, 
+    storage, 
+    googleProvider,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signInWithRedirect,
+    getRedirectResult
+};
